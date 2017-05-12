@@ -12,12 +12,20 @@
     <div class="box music-box">
       <h5 v-show="music.name!=''?true:false">正在播放-
         <<{{music.name}}>></h5>
+        <div class="field is-grouped">
+          <p class="control">
+            <i class="button is-small is-warning fa" :class="isPlaying?'fa-stop':'fa-play'" @click="dalAudio"></i>
+          </p>
+           <p class="control is-expanded">
+            <progress class="progress is-success" :value="pCurrentTime" :max="pDuration"></progress>
+          </p>
+        </div>
       <audio ref="audio" :src="music.url" controls autoplay></audio>
     </div>
     <div class="columns is-mobile">
       <div class="column is-4 box list">
         <div class="tile is-ancestor is-vertical">
-          <div :class="music==song?'is-danger':''" class="button tile" v-for="song in album" @click="changeSong(song)">
+          <div :class="music==song?'is-danger':''" :ref='"ink-"+index' class="button tile" v-for="(song,index) in album" @click="changeSong(song,index)">
             <i v-if="music==song" class="fa fa-music is-left"></i>{{song.name}}</div>
         </div>
       </div>
@@ -35,13 +43,17 @@
 
 <script>
 import ApiMusic from '../services/music_api'
+
 export default {
   data: function () {
     return {
-      music: { name: '', url: ''},
+      music: { name: '暂无', url: '' },
       album: [],
       keyWord: '',
-      // audio:{}
+      audio: {currentTime:0,duration:0},
+      pCurrentTime:0, //当前播放时间
+      pDuration:0,//总长度
+      isPlaying:false//是否正在播放
     }
   },
   methods: {
@@ -49,13 +61,34 @@ export default {
       this.$store.dispatch('getSongs', this.keyWord)
     },
     //选择歌曲改变
-    changeSong(song) {
+    changeSong(song,i) {
+      // console.log(this.$refs)
+      // this.$refs["ink-"+i][0].classList.add('is-warning')
       this.music = song
     },
     selAlbum(album) {
       this.$store.dispatch('selectAlbum', album.a_id)
       this.album = this.$store.state.music.album.songs
     },
+    playing(){
+      // console.log('playing...')
+      // console.log(this.audio.duration)
+      // console.log(this.audio.currentTime)
+      this.pCurrentTime = this.audio.currentTime
+      this.pDuration = this.audio.duration
+      requestAnimationFrame(this.playing)
+    },
+    dalAudio(){
+      console.dir(this.audio)
+      if(this.isPlaying){
+        this.audio.play()
+        this.isPlaying = !this.isPlaying
+      }
+      else{
+        this.audio.pause()
+        this.isPlaying = !this.isPlaying
+      }
+    }
     // play(){//开始播放
     //   this.$refs.audio.play()
     // },
@@ -64,9 +97,11 @@ export default {
     // }
   },
   created() {
+    requestAnimationFrame(this.playing)
     this.$store.dispatch('getSongs')
   },
-  mounted(){
+  mounted() {
+    this.audio = this.$refs.audio
   }
 }
 </script>
@@ -81,13 +116,15 @@ export default {
 .music {
   padding: 15px;
 }
-.music-box{
+
+/*.music-box {
   min-height: 130px;
-}
+}*/
+
 audio {
   width: 100%;
   height: 60px;
-  /*display: none;*/
+  display: none;
 }
 
 .album {
@@ -99,5 +136,8 @@ audio {
 
 .album img {
   margin: 0 auto;
+}
+.progress{
+  height: 100%;
 }
 </style>
