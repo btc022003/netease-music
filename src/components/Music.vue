@@ -79,13 +79,13 @@ export default {
       requestAnimationFrame(this.playing)
     },
     dalAudio(){
-      console.dir(this.audio)
+      // console.dir(this.audio)
       if(this.isPlaying){
-        this.audio.play()
+        this.audio.pause()
         this.isPlaying = !this.isPlaying
       }
       else{
-        this.audio.pause()
+        this.audio.play()
         this.isPlaying = !this.isPlaying
       }
     }
@@ -98,10 +98,19 @@ export default {
   },
   created() {
     requestAnimationFrame(this.playing)
-    this.$store.dispatch('getSongs')
+    this.$store.dispatch('getSongs','咖喱咖喱')
   },
   mounted() {
     this.audio = this.$refs.audio
+  },
+  watch:{
+    pDuration:function(){//监听音乐时间的改变 从而判断是否已经开始播放
+      if(isNaN(this.pDuration) == false){
+        // console.log(this.pDuration)
+        // console.log('播放中...')
+        this.isPlaying = true
+      }
+    }
   }
 }
 </script>
