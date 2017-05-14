@@ -1,5 +1,10 @@
 <template>
   <div class="music">
+    <!--<div class="box">
+      <span><i class="fa fa-star star"></i></span>
+      <span><i class="fa fa-star star"></i></span>
+      <span><i class="fa fa-star star half-star"></i></span>
+    </div>-->
     <div class="field is-grouped">
       <p class="control is-expanded">
         <input class="input" v-model="keyWord" @keyup.enter="search" type="text" placeholder="输入查询关键字">
@@ -149,4 +154,18 @@ audio {
 .progress{
   height: 100%;
 }
+/*半颗星实现效果*/
+/*.box span{
+  width: 120px;
+  height: 120px;
+  display: inline-block;
+}
+i.star{
+  font-size: 120px;
+  position: absolute;
+  color: gold;
+}
+.star.half-star{
+  clip: rect(0px 60px 120px 0px);
+}*/
 </style>

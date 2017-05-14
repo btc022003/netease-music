@@ -2,6 +2,13 @@
 
 > 网易云音乐
 
+网易云音乐的抓取以及播放效果
+
+[抓取数据的核心代码](http://lixuanqi.com/articles/142)
+
+[效果展示](http://penkuoer.com/netease-music/dist/#/)
+
+
 ## Build Setup
 
 ``` bash
